@@ -6,12 +6,12 @@ const FORBIDDEN = 403;
 const FORBIDDEN_MESSAGE = "Access denied";
 const NOT_FOUND = 404;
 const NOT_FOUND_MESSAGE = "Resource does not exist";
-const INTERNAL_SERVER_ERROR = 500;
-const INTERNAL_SERVER_ERROR_MESSAGE = "Server couldn't connect to database";
 const CONFLICT = 409;
 const CONFLICT_MESSAGE = "Username already in use";
 const TOO_MANY_REQUESTS = 429;
 const TOO_MANY_REQUESTS_MESSAGE = "Too many requests. Please try again later.";
+const INTERNAL_SERVER_ERROR = 500;
+const INTERNAL_SERVER_ERROR_MESSAGE = "Server couldn't connect to database";
 module.exports = {
   BAD_REQUEST,
   BAD_REQUEST_MESSAGE,
