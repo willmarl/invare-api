@@ -8,11 +8,7 @@ const {
 
 const { validateCreateUser } = require("../../validations/userValidation");
 
-//current endpoint /api/v1/users
-router.get("/", (req, res) => {
-  res.send("Hello World!");
-  console.log("Hello World! console");
-});
+//current endpoint /v1/users
 router.post("/", validateCreateUser, createUser);
 router.get("/:id", getUserById);
 router.put("/:id", updateUser);
