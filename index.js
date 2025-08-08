@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const mainRouter = require("./routes/index");
+const path = require("path");
 const cors = require("cors");
 const helmet = require("helmet");
 const errorHandler = require("./middlewares/error-handler");
@@ -47,6 +48,7 @@ app.use(
 
 app.use(requestLogger);
 app.use(apiLimiter);
+app.use("/static", express.static(path.join(__dirname, "uploads")));
 app.use("/", mainRouter);
 
 app.use(errorLogger);

@@ -22,6 +22,11 @@ const moduleSchema = new mongoose.Schema({
     mimeType: String,
     size: Number,
   },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Module", moduleSchema);
