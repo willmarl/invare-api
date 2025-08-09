@@ -8,7 +8,7 @@ const helmet = require("helmet");
 const errorHandler = require("./middlewares/error-handler");
 const { errors } = require("celebrate");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
-const apiLimiter = require("./middlewares/rate-limiter");
+const { apiLimiter } = require("./middlewares/rate-limiter");
 const allowedOrigins = [
   process.env.LOCAL_ORIGIN,
   ...process.env.PROD_ORIGINS.split(","),

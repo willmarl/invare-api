@@ -14,5 +14,16 @@ const apiLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
+const assistantLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: "Rate limit exceeded for assistant. Try again shortly.",
+    data: null,
+  },
+});
 
-module.exports = apiLimiter;
+module.exports = { apiLimiter, assistantLimiter };
