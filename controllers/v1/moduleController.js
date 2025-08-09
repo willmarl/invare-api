@@ -15,7 +15,7 @@ exports.createModule = async (req, res, next) => {
     const owner = req.user._id;
 
     if (!req.file) {
-      throw new BadRequestError(BAD_REQUEST_MESSAGE + ": No image provided");
+      throw new BadRequestError(`${BAD_REQUEST_MESSAGE}: No image provided`);
     }
 
     const image = await storage.save(req.file, `modules/${owner}`);
@@ -67,7 +67,7 @@ exports.getModuleById = async (req, res, next) => {
 };
 
 exports.getModulesByOwner = async (req, res, next) => {
-  const ownerId = req.params.ownerId;
+  const { ownerId } = req.params;
   try {
     const modules = await Module.find({ owner: ownerId });
     if (modules.length === 0) throw new NotFoundError(NOT_FOUND_MESSAGE);
@@ -81,8 +81,8 @@ exports.getModulesByOwner = async (req, res, next) => {
 };
 
 exports.updateModule = async (req, res, next) => {
-  const body = req.body;
-  delete body?.owner; //prevent changing owner
+  const { body } = req;
+  delete body?.owner; // prevent changing owner
   try {
     if (req.file) {
       const newImage = await storage.save(req.file, `modules/${req.user._id}`);

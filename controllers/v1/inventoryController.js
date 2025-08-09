@@ -10,7 +10,7 @@ const {
 const Module = require("../../models/module");
 
 exports.createInventory = async (req, res, next) => {
-  const body = req.body;
+  const { body } = req;
   body.userId = req.user._id;
   try {
     const module = await Module.findOne({ _id: body.moduleId });

@@ -41,6 +41,6 @@ exports.handleChat = async (req, res, next) => {
     return res.json({ chatbotReply: filteredData });
   } catch (err) {
     console.error(err);
-    next(err);
+    return next(err);
   }
 };

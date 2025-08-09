@@ -16,7 +16,7 @@ const { protect } = require("../../middlewares/auth");
 const upload = require("../../middlewares/upload");
 const ownershipCheck = require("../../middlewares/ownership");
 
-//current endpoint /v1/modules
+// current endpoint /v1/modules
 router.post(
   "/",
   protect,

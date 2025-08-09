@@ -1,6 +1,7 @@
 const NotFoundError = require("../errors/NotFoundError");
 const UnauthorizedError = require("../errors/UnauthorizedError");
 const { NOT_FOUND_MESSAGE, UNAUTHORIZED_MESSAGE } = require("../utils/errors");
+
 const ownershipCheck = (model, ownerField) => {
   return async (req, res, next) => {
     try {

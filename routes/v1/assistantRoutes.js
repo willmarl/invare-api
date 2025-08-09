@@ -4,7 +4,7 @@ const { protect } = require("../../middlewares/auth");
 const { assistantLimiter } = require("../../middlewares/rate-limiter");
 const { validateChat } = require("../../validations/assistantValidation");
 
-//current endpoint /v1/chat
+// current endpoint /v1/chat
 router.post("/", protect, assistantLimiter, validateChat, handleChat);
 
 module.exports = router;

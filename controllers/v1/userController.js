@@ -1,3 +1,4 @@
+const bcrypt = require("bcrypt");
 const NotFoundError = require("../../errors/NotFoundError");
 const BadRequestError = require("../../errors/BadRequestError");
 const UnauthorizedError = require("../../errors/UnauthorizedError");
@@ -8,7 +9,6 @@ const {
   UNAUTHORIZED_MESSAGE,
   CONFLICT_MESSAGE,
 } = require("../../utils/errors");
-const bcrypt = require("bcrypt");
 const User = require("../../models/user");
 const { generateToken } = require("../../utils/auth");
 

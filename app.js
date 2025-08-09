@@ -1,14 +1,29 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-const mainRouter = require("./routes/index");
 const path = require("path");
 const cors = require("cors");
 const helmet = require("helmet");
-const errorHandler = require("./middlewares/error-handler");
 const { errors } = require("celebrate");
+const fs = require("fs");
+const errorHandler = require("./middlewares/error-handler");
+const mainRouter = require("./routes/index");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
 const { apiLimiter } = require("./middlewares/rate-limiter");
+
+// need uploads/temp/ folder to exist for multer to work
+const requiredDirs = [
+  path.join(__dirname, "uploads"),
+  path.join(__dirname, "uploads", "temp"),
+];
+
+requiredDirs.forEach((dir) => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+    console.log(`Created missing folder: ${dir}`);
+  }
+});
+
 const allowedOrigins = [
   process.env.LOCAL_ORIGIN,
   ...process.env.PROD_ORIGINS.split(","),
@@ -31,16 +46,15 @@ app.use(express.json());
 app.use(helmet());
 app.use(
   cors({
-    origin: function (origin, callback) {
+    origin(origin, callback) {
       // Allow requests with no origin (like curl or Postman)
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.log(`blocked CORS request from: ${origin}`);
-        callback(new Error("not allowed by CORS"));
+        return callback(null, true);
       }
+      console.log(`blocked CORS request from: ${origin}`);
+      return callback(new Error("not allowed by CORS"));
     },
     credentials: true,
   }),
