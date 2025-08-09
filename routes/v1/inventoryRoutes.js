@@ -18,8 +18,8 @@ const Inventory = require("../../models/inventory");
 
 //current endpoint /v1/inventories
 router.post("/", protect, validateCreateInventory, createInventory);
-router.get("/:id", getInventoryById);
-router.get("/by/:userId", getInventoryByUser);
+router.get("/:id", protect, getInventoryById);
+router.get("/by/:userId", protect, getInventoryByUser);
 router.put(
   "/:id",
   protect,
