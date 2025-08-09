@@ -1,7 +1,8 @@
-const ownershipCheck = (model, ownerField = "author") => {
+const ownershipCheck = (model, ownerField) => {
   return async (req, res, next) => {
     try {
       const resource = await model.findById(req.params.id);
+
       if (!resource)
         return res.status(404).json({ message: "Resource not found" });
 

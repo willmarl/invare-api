@@ -11,6 +11,7 @@ const inventorySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Module",
     required: true,
+    unique: true,
   },
   quantity: {
     type: Number,
