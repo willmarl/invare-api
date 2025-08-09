@@ -1,5 +1,4 @@
 const router = require("express").Router();
-const { protect } = require("../../middlewares/auth");
 
 const userRoutes = require("./userRoutes");
 const moduleRoutes = require("./moduleRoutes");

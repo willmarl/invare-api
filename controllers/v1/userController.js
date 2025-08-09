@@ -46,8 +46,6 @@ exports.getUserById = async (req, res, next) => {
 };
 
 exports.updateUser = async (req, res, next) => {
-  if (req.user._id !== req.params.id)
-    throw new ForbiddenError(FORBIDDEN_MESSAGE);
   try {
     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
