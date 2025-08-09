@@ -5,8 +5,8 @@ const {
 const rateLimit = require("express-rate-limit");
 
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 min
-  max: 500, // limit each IP to 500 requests per window
+  windowMs: Number(process.env.API_WINDOW_MS) || 15 * 60 * 1000,
+  max: Number(process.env.API_MAX_REQUESTS) || 500,
   message: {
     status: TOO_MANY_REQUESTS,
     message: TOO_MANY_REQUESTS_MESSAGE,
@@ -15,14 +15,13 @@ const apiLimiter = rateLimit({
   legacyHeaders: false,
 });
 const assistantLimiter = rateLimit({
-  windowMs: 60 * 1000,
-  max: 20,
+  windowMs: Number(process.env.ASSISTANT_WINDOW_MS) || 60 * 1000,
+  max: Number(process.env.ASSISTANT_MAX_REQUESTS) || 20,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
-    success: false,
-    message: "Rate limit exceeded for assistant. Try again shortly.",
-    data: null,
+    status: TOO_MANY_REQUESTS,
+    message: TOO_MANY_REQUESTS_MESSAGE,
   },
 });
 
