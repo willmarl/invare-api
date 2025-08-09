@@ -7,7 +7,7 @@ const v1Router = require("./v1/index");
 router.use("/v1", v1Router);
 
 // 404 fallback
-router.use((req, res) => {
+router.use((req, res, next) => {
   throw new NotFoundError(NOT_FOUND_MESSAGE);
 });
 

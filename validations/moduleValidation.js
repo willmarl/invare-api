@@ -6,7 +6,6 @@ exports.validateCreateModule = celebrate({
     name: Joi.string().min(1).max(256).required(),
     description: Joi.string().max(1024),
     category: Joi.string().max(64),
-    owner: objectIdField.required(),
   }),
 });
 
@@ -15,6 +14,5 @@ exports.validateUpdateModule = celebrate({
     name: Joi.string().min(1).max(256),
     description: Joi.string().max(1024),
     category: Joi.string().max(64),
-    owner: objectIdField,
   }),
 });
