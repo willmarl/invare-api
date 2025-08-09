@@ -1,22 +1,22 @@
+const NotFoundError = require("../errors/NotFoundError");
+const UnauthorizedError = require("../errors/UnauthorizedError");
+const { NOT_FOUND_MESSAGE, UNAUTHORIZED_MESSAGE } = require("../utils/errors");
 const ownershipCheck = (model, ownerField) => {
   return async (req, res, next) => {
     try {
       const resource = await model.findById(req.params.id);
 
-      if (!resource)
-        return res.status(404).json({ message: "Resource not found" });
+      if (!resource) throw new NotFoundError(NOT_FOUND_MESSAGE);
 
       const ownerId = resource[ownerField]?.toString();
-      if (ownerId !== req.user._id) {
-        return res
-          .status(403)
-          .json({ message: "Not authorized to modify this resource" });
-      }
+      if (ownerId !== req.user._id)
+        throw new UnauthorizedError(UNAUTHORIZED_MESSAGE);
 
       req.resource = resource;
       next();
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      console.error(err);
+      next(err);
     }
   };
 };
