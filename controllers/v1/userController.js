@@ -28,8 +28,13 @@ exports.createUser = async (req, res, next) => {
 };
 
 exports.getUserById = async (req, res, next) => {
+  let user;
   try {
-    const user = await User.findById(req.params.id);
+    if (req.params.id === "me") {
+      user = await User.findById(req.user._id);
+    } else {
+      user = await User.findById(req.params.id);
+    }
     if (!user) throw new NotFoundError(NOT_FOUND_MESSAGE);
     res.json(user);
   } catch (err) {
@@ -84,6 +89,19 @@ exports.login = async (req, res, next) => {
       user: userSafe,
     });
   } catch (err) {
+    next(err);
+  }
+};
+
+exports.getCurrentUser = async (req, res, next) => {
+  try {
+    const currentUser = await User.findById(req.user._id).select("-password");
+
+    if (!currentUser) throw new NotFoundError(NOT_FOUND_MESSAGE);
+
+    res.json(currentUser);
+  } catch (err) {
+    console.error(err);
     next(err);
   }
 };
