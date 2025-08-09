@@ -84,9 +84,6 @@ exports.login = async (req, res, next) => {
       user: userSafe,
     });
   } catch (err) {
-    console.error("debug", err);
-    console.error("debug", err.name);
-    console.error("debug", err.message);
     next(err);
   }
 };
