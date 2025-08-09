@@ -12,6 +12,6 @@ const { protect } = require("../../middlewares/auth");
 //current endpoint /v1/users
 router.get("/me", protect, getCurrentUser);
 router.get("/:id", protect, getUserById);
-router.put("/:id", protect, validateUpdateUser, updateUser);
+router.put("/me", protect, validateUpdateUser, updateUser);
 
 module.exports = router;

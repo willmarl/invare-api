@@ -45,10 +45,10 @@ exports.getUserById = async (req, res, next) => {
 
 exports.updateUser = async (req, res, next) => {
   try {
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+    const updatedUser = await User.findByIdAndUpdate(req.user._id, req.body, {
       new: true,
       runValidators: true,
-    });
+    }).select("-password");
 
     if (!updatedUser) throw new NotFoundError(NOT_FOUND_MESSAGE);
 
