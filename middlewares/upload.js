@@ -1,5 +1,6 @@
 const multer = require("multer");
 const path = require("path");
+const { BAD_REQUEST } = require("../utils/errors");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -16,7 +17,9 @@ const fileFilter = (req, file, cb) => {
   if (file.mimetype.startsWith("image/")) {
     cb(null, true);
   } else {
-    cb(new Error("Only image uploads allowed"), false);
+    const error = new Error("Only image uploads allowed");
+    error.statusCode = BAD_REQUEST;
+    cb(error, false);
   }
 };
 

@@ -20,8 +20,8 @@ const ownershipCheck = require("../../middlewares/ownership");
 router.post(
   "/",
   protect,
-  validateCreateModule,
   upload.single("file"),
+  validateCreateModule,
   createModule,
 );
 router.get("/", getModules);

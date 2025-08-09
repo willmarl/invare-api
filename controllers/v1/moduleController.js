@@ -15,7 +15,7 @@ exports.createModule = async (req, res, next) => {
     const owner = req.user._id;
 
     if (!req.file) {
-      throw new BadRequestError(BAD_REQUEST_MESSAGE);
+      throw new BadRequestError(BAD_REQUEST_MESSAGE + ": No image provided");
     }
 
     const image = await storage.save(req.file, `modules/${owner}`);
@@ -35,7 +35,7 @@ exports.createModule = async (req, res, next) => {
       module: newModule,
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     if (err.name === "ValidationError")
       throw new BadRequestError(BAD_REQUEST_MESSAGE);
     if (err.code === 11000) throw new ConflictError(CONFLICT_MESSAGE);
@@ -48,7 +48,7 @@ exports.getModules = async (req, res, next) => {
     const modules = await Module.find();
     res.json(modules);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     next(err);
   }
 };
@@ -59,7 +59,7 @@ exports.getModuleById = async (req, res, next) => {
     if (!module) throw new NotFoundError(NOT_FOUND_MESSAGE);
     res.json(module);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     if (err.message.includes("Cast to ObjectId failed"))
       throw new BadRequestError(BAD_REQUEST_MESSAGE);
     next(err);
@@ -73,7 +73,7 @@ exports.getModulesByOwner = async (req, res, next) => {
     if (modules.length === 0) throw new NotFoundError(NOT_FOUND_MESSAGE);
     res.send(modules);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     if (err.message.includes("Cast to ObjectId failed"))
       throw new BadRequestError(BAD_REQUEST_MESSAGE);
     next(err);
@@ -87,7 +87,6 @@ exports.updateModule = async (req, res, next) => {
     if (req.file) {
       const newImage = await storage.save(req.file, `modules/${req.user._id}`);
       body.image = newImage;
-      console.log("DEBUG", body.image);
     }
 
     const updatedModule = await Module.findByIdAndUpdate(req.params.id, body, {
@@ -99,7 +98,7 @@ exports.updateModule = async (req, res, next) => {
 
     res.json(updatedModule);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     if (err.message.includes("Cast to ObjectId failed"))
       throw new BadRequestError(BAD_REQUEST_MESSAGE);
     if (err.name === "ValidationError")
@@ -115,7 +114,7 @@ exports.deleteModule = async (req, res, next) => {
     if (!deletedModule) throw new NotFoundError(NOT_FOUND_MESSAGE);
     res.json({ message: "Module deleted successfully" });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     if (err.message.includes("Cast to ObjectId failed"))
       throw new BadRequestError(BAD_REQUEST_MESSAGE);
     next(err);
