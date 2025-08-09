@@ -1,39 +1,48 @@
 const NotFoundError = require("../../errors/NotFoundError");
-const InternalServerError = require("../../errors/InternalServerError");
 const BadRequestError = require("../../errors/BadRequestError");
+const ForbiddenError = require("../../errors/ForbiddenError");
 const UnauthorizedError = require("../../errors/UnauthorizedError");
+const ConflictError = require("../../errors/ConflictError");
 const {
   BAD_REQUEST_MESSAGE,
-  INTERNAL_SERVER_ERROR_MESSAGE,
   NOT_FOUND_MESSAGE,
   UNAUTHORIZED_MESSAGE,
+  CONFLICT_MESSAGE,
+  FORBIDDEN_MESSAGE,
 } = require("../../utils/errors");
 const bcrypt = require("bcrypt");
 const User = require("../../models/user");
 const { generateToken } = require("../../utils/auth");
 
-exports.createUser = async (req, res) => {
+exports.createUser = async (req, res, next) => {
   try {
     const newUser = await User.create(req.body);
     res.status(201).json(newUser);
   } catch (err) {
-    console.log(err);
-    throw new BadRequestError(BAD_REQUEST_MESSAGE);
+    console.error(err);
+    if (err.name === "ValidationError")
+      throw new BadRequestError(BAD_REQUEST_MESSAGE);
+    if (err.code === 11000) throw new ConflictError(CONFLICT_MESSAGE);
+    next(err);
   }
 };
 
-exports.getUserById = async (req, res) => {
+exports.getUserById = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) throw new NotFoundError(NOT_FOUND_MESSAGE);
     res.json(user);
   } catch (err) {
-    console.log(err);
-    throw new InternalServerError(INTERNAL_SERVER_ERROR_MESSAGE);
+    console.error(err);
+    if (err.message.includes("Cast to ObjectId failed"))
+      throw new BadRequestError(BAD_REQUEST_MESSAGE);
+    next(err);
   }
 };
 
-exports.updateUser = async (req, res) => {
+exports.updateUser = async (req, res, next) => {
+  if (req.user._id !== req.params.id)
+    throw new ForbiddenError(FORBIDDEN_MESSAGE);
   try {
     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -44,8 +53,13 @@ exports.updateUser = async (req, res) => {
 
     res.json(updatedUser);
   } catch (err) {
-    console.log(err);
-    throw new BadRequestError(BAD_REQUEST_MESSAGE);
+    console.error(err);
+    if (err.message.includes("Cast to ObjectId failed"))
+      throw new BadRequestError(BAD_REQUEST_MESSAGE);
+    if (err.name === "ValidationError")
+      throw new BadRequestError(BAD_REQUEST_MESSAGE);
+    if (err.code === 11000) throw new ConflictError(CONFLICT_MESSAGE);
+    next(err);
   }
 };
 
