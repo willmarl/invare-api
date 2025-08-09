@@ -63,7 +63,7 @@ exports.updateUser = async (req, res, next) => {
   }
 };
 
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
   try {
     const { username, password } = req.body;
 
@@ -84,6 +84,9 @@ exports.login = async (req, res) => {
       user: userSafe,
     });
   } catch (err) {
-    throw new InternalServerError(INTERNAL_SERVER_ERROR_MESSAGE);
+    console.error("debug", err);
+    console.error("debug", err.name);
+    console.error("debug", err.message);
+    next(err);
   }
 };
