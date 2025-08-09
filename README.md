@@ -53,6 +53,8 @@ The Invare API is a Node.js backend built with Express, Mongoose, and MongoDB. I
     MONGODB_URI=<your-mongodb-connection-string>
     JWT_SECRET=<your-jwt-secret>
     OPENAI_API_KEY=<your-openai-api-key>
+    PROD_ORIGINS=https://invare.app,https://www.invare.app,https://api.invare.app
+
     ```
 
     Replace the placeholders with your actual values.
@@ -81,6 +83,8 @@ The Invare API is a Node.js backend built with Express, Mongoose, and MongoDB. I
 
 ## API Endpoints
 
+[Postman Collection](https://willmarl-5644054.postman.co/workspace/William-Marlette's-Workspace~1700bca8-bcde-4108-86e7-b217ae628eba/collection/47471224-21881ad8-9fb1-490d-9096-c73f027a8465?action=share&creator=47471224)
+
 ### User Routes
 
 - `POST /v1/users/register`: Register a new user.
@@ -92,6 +96,7 @@ The Invare API is a Node.js backend built with Express, Mongoose, and MongoDB. I
 
 - `GET /v1/modules`: Get all modules.
 - `GET /v1/modules/:id`: Get a module by ID.
+- `GET /v1/modules/by/:id`: Get all modules owned by userID.
 - `POST /v1/modules`: Create a new module.
 - `PUT /v1/modules/:id`: Update a module by ID.
 - `DELETE /v1/modules/:id`: Delete a module by ID.
@@ -99,11 +104,11 @@ The Invare API is a Node.js backend built with Express, Mongoose, and MongoDB. I
 ### Inventory Routes
 
 - `GET /v1/inventories`: Get all inventory items.
-- `GET /v1/inventories/:id`: Get an inventory item by ID.
+- `GET /v1/inventories/:id`: Get an inventory item by user ID.
 - `POST /v1/inventories`: Create a new inventory item.
 - `PUT /v1/inventories/:id`: Update an inventory item by ID.
 - `DELETE /v1/inventories/:id`: Delete an inventory item by ID.
 
 ### Assistant Route
 
-- `POST /v1/assistant/chat`: Send a message to the AI assistant.
+- `POST /v1/assistant/`: Send a message to the AI assistant.
