@@ -1,20 +1,13 @@
 const NotFoundError = require("../../errors/NotFoundError");
 const BadRequestError = require("../../errors/BadRequestError");
-const ForbiddenError = require("../../errors/ForbiddenError");
 const ConflictError = require("../../errors/ConflictError");
 const Inventory = require("../../models/inventory");
 const {
   BAD_REQUEST_MESSAGE,
   NOT_FOUND_MESSAGE,
-  FORBIDDEN_MESSAGE,
   CONFLICT_MESSAGE,
 } = require("../../utils/errors");
 const Module = require("../../models/module");
-
-// ex of what inventory should save
-// "userId": 1,
-// "moduleId": 1,
-// "quantity": 2
 
 exports.createInventory = async (req, res, next) => {
   const body = req.body;
@@ -61,13 +54,6 @@ exports.getInventoryByUser = async (req, res, next) => {
 };
 
 exports.updateInventory = async (req, res, next) => {
-  // const inventoryId = req.params.id;
-  // const inventory
-  // only need to change quantity. if need to change module then delete from inventory
-  // and user have to add new module to inventory
-  // if (req.user._id !== req.body.userId)
-  //   //prevent changing other users stuff
-  //   throw new ForbiddenError(FORBIDDEN_MESSAGE);
   try {
     const updatedInventory = await Inventory.findByIdAndUpdate(
       req.params.id,
