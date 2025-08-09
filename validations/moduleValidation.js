@@ -1,5 +1,4 @@
 const { celebrate, Joi, Segments } = require("celebrate");
-const { objectIdField } = require("./baseSchemas");
 
 exports.validateCreateModule = celebrate({
   [Segments.BODY]: Joi.object({

@@ -1,6 +1,5 @@
 const NotFoundError = require("../../errors/NotFoundError");
 const BadRequestError = require("../../errors/BadRequestError");
-const ForbiddenError = require("../../errors/ForbiddenError");
 const UnauthorizedError = require("../../errors/UnauthorizedError");
 const ConflictError = require("../../errors/ConflictError");
 const {
@@ -8,7 +7,6 @@ const {
   NOT_FOUND_MESSAGE,
   UNAUTHORIZED_MESSAGE,
   CONFLICT_MESSAGE,
-  FORBIDDEN_MESSAGE,
 } = require("../../utils/errors");
 const bcrypt = require("bcrypt");
 const User = require("../../models/user");
