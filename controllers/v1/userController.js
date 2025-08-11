@@ -15,7 +15,9 @@ const { generateToken } = require("../../utils/auth");
 exports.createUser = async (req, res, next) => {
   try {
     const newUser = await User.create(req.body);
-    res.status(201).json(newUser);
+    const userWithoutPassword = { ...newUser.toObject() };
+    delete userWithoutPassword.password;
+    res.status(201).json(userWithoutPassword);
   } catch (err) {
     console.error(err);
     if (err.name === "ValidationError")
