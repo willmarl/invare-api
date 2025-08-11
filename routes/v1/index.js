@@ -1,0 +1,17 @@
+const router = require("express").Router();
+
+const userRoutes = require("./userRoutes");
+const moduleRoutes = require("./moduleRoutes");
+const inventoryRoutes = require("./inventoryRoutes");
+const assistantRoutes = require("./assistantRoutes");
+const { createUser, login } = require("../../controllers/v1/userController");
+const { validateCreateUser } = require("../../validations/userValidation");
+
+router.use("/users", userRoutes);
+router.use("/modules", moduleRoutes);
+router.use("/inventories", inventoryRoutes);
+router.use("/assistant", assistantRoutes);
+router.post("/register", validateCreateUser, createUser);
+router.post("/login", login);
+
+module.exports = router;
