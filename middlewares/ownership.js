@@ -1,6 +1,6 @@
 const NotFoundError = require("../errors/NotFoundError");
-const UnauthorizedError = require("../errors/UnauthorizedError");
-const { NOT_FOUND_MESSAGE, UNAUTHORIZED_MESSAGE } = require("../utils/errors");
+const ForbiddenError = require("../errors/UnauthorizedError");
+const { NOT_FOUND_MESSAGE, FORBIDDEN_MESSAGE } = require("../utils/errors");
 
 const ownershipCheck = (model, ownerField) => {
   return async (req, res, next) => {
@@ -10,8 +10,7 @@ const ownershipCheck = (model, ownerField) => {
       if (!resource) throw new NotFoundError(NOT_FOUND_MESSAGE);
 
       const ownerId = resource[ownerField]?.toString();
-      if (ownerId !== req.user._id)
-        throw new UnauthorizedError(UNAUTHORIZED_MESSAGE);
+      if (ownerId !== req.user._id) throw new ForbiddenError(FORBIDDEN_MESSAGE);
 
       req.resource = resource;
       next();
