@@ -8,6 +8,7 @@ const {
   CONFLICT_MESSAGE,
 } = require("../../utils/errors");
 const Module = require("../../models/module");
+const User = require("../../models/user");
 
 exports.createInventory = async (req, res, next) => {
   const { body } = req;
@@ -42,8 +43,13 @@ exports.getInventoryById = async (req, res, next) => {
 exports.getInventoryByUser = async (req, res, next) => {
   const user = req.params.userId;
   try {
+    // Check if user exists
+    const userExist = await User.findById(user);
+    if (!userExist) {
+      throw new NotFoundError(NOT_FOUND_MESSAGE);
+    }
+
     const inventories = await Inventory.find({ userId: user });
-    if (inventories.length === 0) throw new NotFoundError(NOT_FOUND_MESSAGE);
     res.send(inventories);
   } catch (err) {
     console.error(err);

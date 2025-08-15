@@ -7,6 +7,7 @@ const {
   CONFLICT_MESSAGE,
 } = require("../../utils/errors");
 const Module = require("../../models/module");
+const User = require("../../models/user");
 const storage = require("../../services/storageService");
 const normalizeTags = require("../../utils/normalizeTags");
 
@@ -70,8 +71,12 @@ exports.getModuleById = async (req, res, next) => {
 exports.getModulesByOwner = async (req, res, next) => {
   const { ownerId } = req.params;
   try {
+    // Check if user exists
+    const userExist = await User.findById(ownerId);
+    if (!userExist) {
+      throw new NotFoundError(NOT_FOUND_MESSAGE);
+    }
     const modules = await Module.find({ owner: ownerId });
-    if (modules.length === 0) throw new NotFoundError(NOT_FOUND_MESSAGE);
     res.send(modules);
   } catch (err) {
     console.error(err);
