@@ -7,7 +7,6 @@ const assistantRoutes = require("./assistantRoutes");
 const {
   createUser,
   login,
-  refreshToken,
   logout,
 } = require("../../controllers/v1/userController");
 const { protect } = require("../../middlewares/auth");
@@ -19,7 +18,6 @@ router.use("/inventories", inventoryRoutes);
 router.use("/assistant", assistantRoutes);
 router.post("/register", validateCreateUser, createUser);
 router.post("/login", login);
-router.post("/refresh", refreshToken);
 router.post("/logout", protect, logout);
 
 module.exports = router;
