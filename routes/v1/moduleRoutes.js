@@ -24,9 +24,9 @@ router.post(
   validateCreateModule,
   createModule,
 );
-router.get("/", protect, getModules);
-router.get("/:moduleId", protect, getModuleById);
-router.get("/by/:ownerId", protect, getModulesByOwner);
+router.get("/", getModules);
+router.get("/:moduleId", getModuleById);
+router.get("/by/:ownerId", getModulesByOwner);
 router.put(
   "/:id",
   protect,
