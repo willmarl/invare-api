@@ -21,24 +21,23 @@ exports.protect = async (req, res, next) => {
 
   jwt.verify(token, ACCESS_TOKEN_SECRET, async (err, decoded) => {
     if (err?.name === "TokenExpiredError") {
-      throw new UnauthorizedError(UNAUTHORIZED_MESSAGE);
+      return next(new UnauthorizedError(UNAUTHORIZED_MESSAGE));
     }
 
     if (err) {
-      throw new ForbiddenError(FORBIDDEN_MESSAGE);
+      return next(new ForbiddenError(FORBIDDEN_MESSAGE));
     }
 
     try {
       const user = await User.findById(decoded.id).select("-password");
 
       if (!user) {
-        throw new NotFoundError(NOT_FOUND_MESSAGE);
+        return next(new NotFoundError(NOT_FOUND_MESSAGE));
       }
 
       req.user = user;
       next();
     } catch (dbErr) {
-      // return res.status(500).json({ message: "Server error", error: dbErr.message });
       next(dbErr);
     }
   });
