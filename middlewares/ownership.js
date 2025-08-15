@@ -10,7 +10,8 @@ const ownershipCheck = (model, ownerField) => {
       if (!resource) throw new NotFoundError(NOT_FOUND_MESSAGE);
 
       const ownerId = resource[ownerField]?.toString();
-      if (ownerId !== req.user._id) throw new ForbiddenError(FORBIDDEN_MESSAGE);
+      if (ownerId !== req.user._id.toString())
+        throw new ForbiddenError(FORBIDDEN_MESSAGE);
 
       req.resource = resource;
       next();
