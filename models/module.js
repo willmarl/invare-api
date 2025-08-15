@@ -27,6 +27,10 @@ const moduleSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  tags: {
+    type: [String],
+    index: true,
+  },
 });
 
 module.exports = mongoose.model("Module", moduleSchema);

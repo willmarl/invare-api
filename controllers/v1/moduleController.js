@@ -8,6 +8,7 @@ const {
 } = require("../../utils/errors");
 const Module = require("../../models/module");
 const storage = require("../../services/storageService");
+const normalizeTags = require("../../utils/normalizeTags");
 
 exports.createModule = async (req, res, next) => {
   try {
@@ -26,6 +27,7 @@ exports.createModule = async (req, res, next) => {
       category,
       image,
       owner,
+      tags: normalizeTags(req.body.tags),
     });
 
     await newModule.save();
