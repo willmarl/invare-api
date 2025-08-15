@@ -5,7 +5,7 @@ const moduleRoutes = require("./moduleRoutes");
 const inventoryRoutes = require("./inventoryRoutes");
 const assistantRoutes = require("./assistantRoutes");
 const {
-  createUser,
+  register,
   login,
   logout,
 } = require("../../controllers/v1/userController");
@@ -16,7 +16,7 @@ router.use("/users", userRoutes);
 router.use("/modules", moduleRoutes);
 router.use("/inventories", inventoryRoutes);
 router.use("/assistant", assistantRoutes);
-router.post("/register", validateCreateUser, createUser);
+router.post("/register", validateCreateUser, register);
 router.post("/login", login);
 router.post("/logout", protect, logout);
 
