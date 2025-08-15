@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
 const path = require("path");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -59,6 +60,7 @@ app.use(
     credentials: true,
   }),
 );
+app.use(cookieParser());
 
 app.use(requestLogger);
 app.use(apiLimiter);

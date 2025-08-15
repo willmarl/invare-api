@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema({
     maxLength: 256,
     select: false,
   },
+  tokenVersion: { type: Number, default: 0 },
 });
 
 userSchema.pre("save", async function (next) {
