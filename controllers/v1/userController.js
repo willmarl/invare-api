@@ -90,10 +90,10 @@ exports.login = async (req, res) => {
   const { username, password } = req.body;
 
   const user = await User.findOne({ username }).select("+password");
-  if (!user) throw new UnauthorizedError(UNAUTHORIZED_MESSAGE);
+  if (!user) throw new NotFoundError(NOT_FOUND_MESSAGE);
 
   const valid = await bcrypt.compare(password, user.password);
-  if (!valid) throw new UnauthorizedError(UNAUTHORIZED_MESSAGE);
+  if (!valid) throw new UnauthorizedError(`${UNAUTHORIZED_MESSAGE}: Bad login`);
 
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);

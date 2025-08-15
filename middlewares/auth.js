@@ -21,7 +21,9 @@ exports.protect = async (req, res, next) => {
 
   jwt.verify(token, ACCESS_TOKEN_SECRET, async (err, decoded) => {
     if (err?.name === "TokenExpiredError") {
-      return next(new UnauthorizedError(UNAUTHORIZED_MESSAGE));
+      return next(
+        new UnauthorizedError(`${UNAUTHORIZED_MESSAGE}: Token expired`),
+      );
     }
 
     if (err) {
