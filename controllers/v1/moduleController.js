@@ -24,10 +24,9 @@ exports.createModule = async (req, res, next) => {
     const newModule = new Module({
       name,
       description,
-      category,
+      category: normalizeTags(req.body.category),
       image,
       owner,
-      tags: normalizeTags(req.body.tags),
     });
 
     await newModule.save();

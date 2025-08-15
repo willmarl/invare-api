@@ -15,12 +15,14 @@ const {
 const { protect } = require("../../middlewares/auth");
 const upload = require("../../middlewares/upload");
 const ownershipCheck = require("../../middlewares/ownership");
+const formDataParser = require("../../middlewares/formDataParser");
 
 // current endpoint /v1/modules
 router.post(
   "/",
   protect,
   upload.single("file"),
+  formDataParser,
   validateCreateModule,
   createModule,
 );

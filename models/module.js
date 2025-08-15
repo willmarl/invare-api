@@ -13,8 +13,9 @@ const moduleSchema = new mongoose.Schema({
     maxLength: 1024,
   },
   category: {
-    type: String,
+    type: [String],
     maxLength: 64,
+    index: true,
   },
   image: {
     url: String,
@@ -26,10 +27,6 @@ const moduleSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
-  },
-  tags: {
-    type: [String],
-    index: true,
   },
 });
 
