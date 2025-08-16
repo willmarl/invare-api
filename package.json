@@ -96,6 +96,7 @@
     "resolve-from": "^4.0.0",
     "shebang-command": "^2.0.0",
     "shebang-regex": "^3.0.0",
+    "slugify": "^1.6.6",
     "strip-json-comments": "^3.1.1",
     "supports-color": "^7.2.0",
     "synckit": "^0.11.11",

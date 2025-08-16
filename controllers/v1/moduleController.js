@@ -10,6 +10,7 @@ const Module = require("../../models/module");
 const User = require("../../models/user");
 const storage = require("../../services/storageService");
 const normalizeTags = require("../../utils/normalizeTags");
+const createSlug = require("../../utils/slugifyHelper");
 
 exports.createModule = async (req, res, next) => {
   try {
@@ -25,7 +26,9 @@ exports.createModule = async (req, res, next) => {
     body.category = normalizeTags(body.category);
     body.owner = owner;
     body.image = image;
-    console.log("DEBUG", body);
+
+    const slug = createSlug(body.name);
+    body.slug = slug;
 
     const newModule = new Module(body);
 
@@ -63,6 +66,23 @@ exports.getModuleById = async (req, res, next) => {
     console.error(err);
     if (err.message.includes("Cast to ObjectId failed"))
       throw new BadRequestError(BAD_REQUEST_MESSAGE);
+    next(err);
+  }
+};
+
+exports.getModuleBySlug = async (req, res, next) => {
+  try {
+    const { slug } = req.params;
+
+    const module = await Module.findOne({ slug });
+
+    if (!module) {
+      throw new NotFoundError(NOT_FOUND_MESSAGE);
+    }
+
+    return res.json(module);
+  } catch (err) {
+    console.error(err);
     next(err);
   }
 };

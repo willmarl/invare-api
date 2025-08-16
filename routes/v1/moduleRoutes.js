@@ -6,6 +6,7 @@ const {
   getModulesByOwner,
   updateModule,
   deleteModule,
+  getModuleBySlug,
 } = require("../../controllers/v1/moduleController");
 const Module = require("../../models/module");
 const {
@@ -39,4 +40,6 @@ router.put(
 );
 router.delete("/:id", protect, ownershipCheck(Module, "owner"), deleteModule);
 
+//slug testing
+router.get("/slug/:slug", getModuleBySlug);
 module.exports = router;

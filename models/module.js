@@ -8,7 +8,11 @@ const moduleSchema = new mongoose.Schema(
       required: true,
       minLength: 1,
       maxLength: 256,
+    },
+    slug: {
+      type: String,
       unique: true,
+      required: true,
     },
     model: {
       type: String,
