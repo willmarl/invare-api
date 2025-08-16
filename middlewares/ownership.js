@@ -2,10 +2,18 @@ const NotFoundError = require("../errors/NotFoundError");
 const ForbiddenError = require("../errors/UnauthorizedError");
 const { NOT_FOUND_MESSAGE, FORBIDDEN_MESSAGE } = require("../utils/errors");
 
-const ownershipCheck = (model, ownerField) => {
+const ownershipCheck = (
+  model,
+  ownerField,
+  paramField = "id",
+  modelField = "_id",
+) => {
   return async (req, res, next) => {
     try {
-      const resource = await model.findById(req.params.id);
+      const value = req.params[paramField];
+      const query =
+        modelField === "_id" ? { _id: value } : { [modelField]: value };
+      const resource = await model.findOne(query);
 
       if (!resource) throw new NotFoundError(NOT_FOUND_MESSAGE);
 

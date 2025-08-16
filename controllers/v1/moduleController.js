@@ -27,7 +27,15 @@ exports.createModule = async (req, res, next) => {
     body.owner = owner;
     body.image = image;
 
-    const slug = createSlug(body.name);
+    let base = createSlug(body.name);
+    let slug = base;
+
+    // Ensure slug uniqueness within this user's namespace
+    let counter = 2;
+    while (await Module.exists({ owner, slug })) {
+      slug = `${base}-${counter++}`;
+    }
+
     body.slug = slug;
 
     const newModule = new Module(body);
@@ -66,23 +74,6 @@ exports.getModuleById = async (req, res, next) => {
     console.error(err);
     if (err.message.includes("Cast to ObjectId failed"))
       throw new BadRequestError(BAD_REQUEST_MESSAGE);
-    next(err);
-  }
-};
-
-exports.getModuleBySlug = async (req, res, next) => {
-  try {
-    const { slug } = req.params;
-
-    const module = await Module.findOne({ slug });
-
-    if (!module) {
-      throw new NotFoundError(NOT_FOUND_MESSAGE);
-    }
-
-    return res.json(module);
-  } catch (err) {
-    console.error(err);
     next(err);
   }
 };
@@ -142,6 +133,100 @@ exports.deleteModule = async (req, res, next) => {
     console.error(err);
     if (err.message.includes("Cast to ObjectId failed"))
       throw new BadRequestError(BAD_REQUEST_MESSAGE);
+    next(err);
+  }
+};
+
+// slug CRUD
+exports.getModuleBySlug = async (req, res, next) => {
+  try {
+    const { slug } = req.params;
+
+    const module = await Module.findOne({ slug });
+
+    if (!module) {
+      throw new NotFoundError(NOT_FOUND_MESSAGE);
+    }
+
+    return res.json(module);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
+exports.getModuleByUserAndSlug = async (req, res, next) => {
+  try {
+    const owner = req.wikiUser._id;
+    const { slug } = req.params;
+    const doc = await Module.findOne({ owner, slug });
+    if (!doc) {
+      throw new NotFoundError(NOT_FOUND_MESSAGE);
+    }
+    return res.json(doc);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
+exports.updateModuleByUserAndSlug = async (req, res, next) => {
+  try {
+    const body = req.body || {};
+    const owner = req.wikiUser._id;
+    const { slug } = req.params;
+
+    // Set renameSlug to true if name is being updated
+    if (typeof body === "object" && body !== null) {
+      body.renameSlug = !!body.name;
+    }
+
+    const doc = await Module.findOne({ owner, slug });
+    if (!doc) {
+      throw new NotFoundError(NOT_FOUND_MESSAGE);
+    }
+
+    // Update fields from body (except owner, slug)
+    Object.keys(body).forEach((key) => {
+      if (key !== "owner" && key !== "slug" && key !== "renameSlug") {
+        doc[key] = body[key];
+      }
+    });
+
+    if (body.renameSlug) {
+      let base = createSlug(body.name);
+      let nextSlug = base;
+      let counter = 2;
+      while (
+        await Module.exists({ owner, slug: nextSlug, _id: { $ne: doc._id } })
+      ) {
+        nextSlug = `${base}-${counter++}`;
+      }
+      doc.slug = nextSlug;
+    }
+
+    await doc.save();
+    return res.json(doc);
+  } catch (err) {
+    if (err.code === 11000) {
+      throw new ConflictError(CONFLICT_MESSAGE);
+    }
+    console.error(err);
+    next(err);
+  }
+};
+
+exports.deleteModuleByUserAndSlug = async (req, res, next) => {
+  try {
+    const owner = req.wikiUser._id;
+    const { slug } = req.params;
+
+    const doc = await Module.findOneAndDelete({ owner, slug });
+    if (!doc) throw new NotFoundError(NOT_FOUND_MESSAGE);
+
+    return res.json({ message: "Module deleted successfully" });
+  } catch (err) {
+    console.error(err);
     next(err);
   }
 };
