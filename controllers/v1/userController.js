@@ -54,14 +54,18 @@ exports.getUserById = async (req, res, next) => {
 
 exports.updateUser = async (req, res, next) => {
   try {
-    const updatedUser = await User.findByIdAndUpdate(req.user._id, req.body, {
-      new: true,
-      runValidators: true,
-    }).select("-password");
+    const user = await User.findById(req.user._id).select("+password");
+    if (!user) throw new NotFoundError(NOT_FOUND_MESSAGE);
 
-    if (!updatedUser) throw new NotFoundError(NOT_FOUND_MESSAGE);
+    // Update fields
+    Object.entries(req.body).forEach(([key, value]) => {
+      user[key] = value;
+    });
 
-    res.json(updatedUser);
+    await user.save();
+    const userObj = user.toObject();
+    delete userObj.password;
+    res.json(userObj);
   } catch (err) {
     console.error(err);
     if (err.message.includes("Cast to ObjectId failed"))
