@@ -13,7 +13,6 @@ const normalizeTags = require("../../utils/normalizeTags");
 
 exports.createModule = async (req, res, next) => {
   try {
-    const { name, description, category } = req.body;
     const owner = req.user._id;
 
     if (!req.file) {
@@ -22,13 +21,13 @@ exports.createModule = async (req, res, next) => {
 
     const image = await storage.save(req.file, `modules/${owner}`);
 
-    const newModule = new Module({
-      name,
-      description,
-      category: normalizeTags(req.body.category),
-      image,
-      owner,
-    });
+    const body = req.body;
+    body.category = normalizeTags(body.category);
+    body.owner = owner;
+    body.image = image;
+    console.log("DEBUG", body);
+
+    const newModule = new Module(body);
 
     await newModule.save();
 

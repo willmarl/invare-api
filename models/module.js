@@ -1,33 +1,63 @@
+const { required } = require("joi");
 const mongoose = require("mongoose");
 
-const moduleSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    minLength: 1,
-    maxLength: 256,
-    unique: true,
+const moduleSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      minLength: 1,
+      maxLength: 256,
+      unique: true,
+    },
+    model: {
+      type: String,
+      maxLength: 256,
+    },
+    description: {
+      type: String,
+      maxLength: 1024,
+    },
+    category: {
+      type: [String],
+      maxLength: 64,
+      index: true,
+    },
+    image: {
+      url: String,
+      key: String,
+      mimeType: String,
+      size: Number,
+    },
+    exampleIdeas: {
+      type: [String],
+      maxLength: 256,
+    },
+
+    codeSnippets: {
+      cpp: {
+        type: String,
+        maxLength: 4096,
+      },
+      python: {
+        type: String,
+        maxLength: 4096,
+      },
+    },
+
+    isOfficial: {
+      type: Boolean,
+      default: false,
+    },
+    owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
-  description: {
-    type: String,
-    maxLength: 1024,
+  {
+    timestamps: true,
   },
-  category: {
-    type: [String],
-    maxLength: 64,
-    index: true,
-  },
-  image: {
-    url: String,
-    key: String,
-    mimeType: String,
-    size: Number,
-  },
-  owner: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-});
+);
 
 module.exports = mongoose.model("Module", moduleSchema);

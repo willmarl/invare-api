@@ -1,5 +1,5 @@
 module.exports = (req, res, next) => {
-  const arrayFields = ["category"]; // Add more keys here if needed
+  const arrayFields = ["category", "exampleIdeas"]; // Add more keys here if needed
 
   arrayFields.forEach((field) => {
     const value = req.body[field];
@@ -17,6 +17,22 @@ module.exports = (req, res, next) => {
       }
     }
   });
+
+  // Parse codeSnippets if sent as a JSON string
+  if (typeof req.body.codeSnippets === "string") {
+    try {
+      const parsed = JSON.parse(req.body.codeSnippets);
+      if (
+        typeof parsed === "object" &&
+        parsed !== null &&
+        !Array.isArray(parsed)
+      ) {
+        req.body.codeSnippets = parsed;
+      }
+    } catch {
+      // leave as is if not valid JSON
+    }
+  }
 
   next();
 };
