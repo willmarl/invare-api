@@ -96,6 +96,10 @@ exports.login = async (req, res) => {
   const user = await User.findOne({ username }).select("+password");
   if (!user) throw new NotFoundError(NOT_FOUND_MESSAGE);
 
+  if (user.role === "system") {
+    throw new ForbiddenError(FORBIDDEN_MESSAGE);
+  }
+
   const valid = await bcrypt.compare(password, user.password);
   if (!valid) throw new UnauthorizedError(`${UNAUTHORIZED_MESSAGE}: Bad login`);
 
