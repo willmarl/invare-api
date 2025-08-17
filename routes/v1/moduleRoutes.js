@@ -4,6 +4,7 @@ const {
   getModules,
   getModuleById,
   getModulesByOwner,
+  getModulesByUsername,
   updateModule,
   deleteModule,
   getModuleBySlug,
@@ -50,6 +51,7 @@ router.get("/slug/:slug", getModuleBySlug);
 
 // wiki slug section
 router.param("username", loadUserByUsername("wikiUser"));
+router.get("/wiki/:username", getModulesByUsername);
 router.get("/wiki/:username/:slug", getModuleByUserAndSlug);
 router.put(
   "/wiki/:username/:slug",

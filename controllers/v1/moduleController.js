@@ -1,3 +1,14 @@
+// Get all modules by owner username (slug)
+exports.getModulesByUsername = async (req, res, next) => {
+  try {
+    const owner = req.wikiUser._id;
+    const modules = await Module.find({ owner });
+    res.json(modules);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
 const BadRequestError = require("../../errors/BadRequestError");
 const NotFoundError = require("../../errors/NotFoundError");
 const ConflictError = require("../../errors/ConflictError");
