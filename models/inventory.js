@@ -16,6 +16,7 @@ const inventorySchema = new mongoose.Schema({
     type: Number,
     minLength: 0,
     maxLength: 9999,
+    default: 0,
   },
 });
 
