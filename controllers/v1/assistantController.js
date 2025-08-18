@@ -9,11 +9,28 @@ exports.handleChat = async (req, res, next) => {
     const ownedModules = await Promise.all(
       userInventoryList.map(async (individualInv) => {
         const module = await Module.findById(individualInv.moduleId);
-        return { module: module.name, quantity: individualInv.quantity };
+        return {
+          module: module.name,
+          quantity: individualInv.quantity,
+          description: module.description,
+        };
         // maybe send descripition and image too if output is poor
       }),
     );
-    const prompt = `You are an assistant that is a concise hardware inventory assistant for Arduino/Raspberry/ESP makers. Only use the user's inventory below. If the answer depends on items not listed, say what is missing. Keep responses short and simple with no markdown. Current inventory is ${JSON.stringify(ownedModules)}`;
+
+    const prompt = `You are an assistant that is a concise hardware inventory assistant for Arduino/Raspberry/ESP makers. Only use the user's inventory below. If the answer depends on items not listed, say what is missing. Try to keep responses short and simple. If appropriate, offer a better way to user's code, problem, solution, etc. Current inventory is ${JSON.stringify(ownedModules)}`;
+
+    // Accepts req.body.messages (array of {role, content})
+    const userMessages = Array.isArray(req.body.messages)
+      ? req.body.messages
+      : [];
+    // Prepend system prompt
+    const openaiMessages = [
+      { role: "system", content: prompt },
+      ...userMessages.filter(
+        (m) => m.role === "user" || m.role === "assistant",
+      ),
+    ];
 
     const r = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
@@ -23,10 +40,7 @@ exports.handleChat = async (req, res, next) => {
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
-        input: [
-          { role: "system", content: prompt },
-          { role: "user", content: req.body.message },
-        ],
+        input: openaiMessages,
       }),
     });
 
