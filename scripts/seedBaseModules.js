@@ -75,10 +75,14 @@ async function seedBaseModules() {
       await Module.create({
         owner: baseUser._id,
         name: mod.name,
+        model: mod.model,
         slug,
         description: mod.description,
-        tags: mod.tags,
+        category: mod.category,
         image: imageData,
+        exampleIdeas: mod.exampleIdeas,
+        codeSnippets: mod.codeSnippets,
+        isOfficial: true,
       });
 
       console.log(`✅ Seeded module: ${slug}`);
