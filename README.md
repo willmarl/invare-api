@@ -65,7 +65,16 @@ The Invare API is a Node.js backend built with Express, Mongoose, and MongoDB. I
 
 1.  Start the MongoDB server.
 
-2.  Start the application:
+2.  (First-time setup only) Prepare upload directories and permissions:
+
+    ```bash
+    chmod +x setup_dirs.sh
+    sudo ./setup_dirs.sh
+    ```
+
+    This script creates the necessary uploads/modules directory and sets permissions. Run it before running the seed script.
+
+3.  Start the application:
 
     ```bash
     npm start
@@ -79,7 +88,7 @@ The Invare API is a Node.js backend built with Express, Mongoose, and MongoDB. I
 
     to start the server with nodemon for automatic restarts on file changes.
 
-3.  The API will be running on `http://localhost:3000` (or the port specified in your `.env` file).
+4.  The API will be running on `http://localhost:3000` (or the port specified in your `.env` file).
 
 ## API Endpoints
 
